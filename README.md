@@ -69,3 +69,28 @@ pnpm dev
 ```
 
 Your app template should now be running on [localhost:3000](http://localhost:3000).
+
+## Custom domain and subpath
+
+To run this app under a subpath like `https://portfoliodanilo.com/clawbot-chat`:
+
+1. Set `NEXT_PUBLIC_BASE_PATH=/clawbot-chat`
+2. Set `NEXT_PUBLIC_SITE_URL=https://portfoliodanilo.com/clawbot-chat`
+3. Set `AUTH_SECRET` (required for Auth.js)
+4. Build/deploy with these variables enabled in your deployment platform
+
+Important: Vercel custom domains are assigned per project at the domain/subdomain level.  
+If `portfoliodanilo.com` is already used by another project, route `/clawbot-chat` to this app via reverse proxy/rewrites in the primary project.
+
+Example rewrite in the primary project (`vercel.json`):
+
+```json
+{
+  "rewrites": [
+    {
+      "source": "/clawbot-chat/:path*",
+      "destination": "https://clawbot-ai-chat.vercel.app/clawbot-chat/:path*"
+    }
+  ]
+}
+```

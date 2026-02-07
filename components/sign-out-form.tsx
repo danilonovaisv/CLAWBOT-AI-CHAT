@@ -1,6 +1,7 @@
 import Form from "next/form";
 
 import { signOut } from "@/app/(auth)/auth";
+import { withBasePath } from "@/lib/base-path";
 
 export const SignOutForm = () => {
   return (
@@ -9,7 +10,7 @@ export const SignOutForm = () => {
         "use server";
 
         await signOut({
-          redirectTo: "/",
+          redirectTo: withBasePath("/"),
         });
       }}
       className="w-full"

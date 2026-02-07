@@ -1,25 +1,28 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
+import { authSecret } from "./lib/auth-secret";
+import { stripBasePath, withBasePath } from "./lib/base-path";
 import { guestRegex, isDevelopmentEnvironment } from "./lib/constants";
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const normalizedPathname = stripBasePath(pathname);
 
   /*
    * Playwright starts the dev server and requires a 200 status to
    * begin the tests, so this ensures that the tests can start
    */
-  if (pathname.startsWith("/ping")) {
+  if (normalizedPathname.startsWith("/ping")) {
     return new Response("pong", { status: 200 });
   }
 
-  if (pathname.startsWith("/api/auth")) {
+  if (normalizedPathname.startsWith("/api/auth")) {
     return NextResponse.next();
   }
 
   const token = await getToken({
     req: request,
-    secret: process.env.AUTH_SECRET,
+    secret: authSecret,
     secureCookie: !isDevelopmentEnvironment,
   });
 
@@ -27,14 +30,21 @@ export async function proxy(request: NextRequest) {
     const redirectUrl = encodeURIComponent(request.url);
 
     return NextResponse.redirect(
-      new URL(`/api/auth/guest?redirectUrl=${redirectUrl}`, request.url)
+      new URL(
+        withBasePath(`/api/auth/guest?redirectUrl=${redirectUrl}`),
+        request.url
+      )
     );
   }
 
   const isGuest = guestRegex.test(token?.email ?? "");
 
-  if (token && !isGuest && ["/login", "/register"].includes(pathname)) {
-    return NextResponse.redirect(new URL("/", request.url));
+  if (
+    token &&
+    !isGuest &&
+    ["/login", "/register"].includes(normalizedPathname)
+  ) {
+    return NextResponse.redirect(new URL(withBasePath("/"), request.url));
   }
 
   return NextResponse.next();

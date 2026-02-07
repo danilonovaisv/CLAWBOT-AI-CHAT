@@ -1,7 +1,24 @@
 import type { NextConfig } from "next";
 
+const normalizeBasePath = (value?: string) => {
+  if (!value) {
+    return "";
+  }
+
+  const trimmed = value.trim();
+  if (!trimmed || trimmed === "/") {
+    return "";
+  }
+
+  const withLeadingSlash = trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
+  return withLeadingSlash.replace(/\/+$/, "");
+};
+
+const basePath = normalizeBasePath(process.env.NEXT_PUBLIC_BASE_PATH);
+
 const nextConfig: NextConfig = {
   cacheComponents: true,
+  basePath,
   images: {
     remotePatterns: [
       {

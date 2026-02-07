@@ -18,6 +18,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { withBasePath } from "@/lib/base-path";
 import { guestRegex } from "@/lib/constants";
 import { LoaderIcon } from "./icons";
 import { toast } from "./toast";
@@ -95,10 +96,10 @@ export function SidebarUserNav({ user }: { user: User }) {
                   }
 
                   if (isGuest) {
-                    router.push("/login");
+                    router.push(withBasePath("/login"));
                   } else {
                     signOut({
-                      redirectTo: "/",
+                      redirectTo: withBasePath("/"),
                     });
                   }
                 }}

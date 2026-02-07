@@ -22,6 +22,7 @@ import {
   SidebarMenu,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { withBasePath } from "@/lib/base-path";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -50,7 +51,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
       success: () => {
         mutate(unstable_serialize(getChatHistoryPaginationKey));
         setShowDeleteAllDialog(false);
-        router.replace("/");
+        router.replace(withBasePath("/"));
         router.refresh();
         return "All chats deleted successfully";
       },
@@ -66,7 +67,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
             <div className="flex flex-row items-center justify-between">
               <Link
                 className="flex flex-row items-center gap-3"
-                href="/"
+                href={withBasePath("/")}
                 onClick={() => {
                   setOpenMobile(false);
                 }}
@@ -99,7 +100,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                       className="h-8 p-1 md:h-fit md:p-2"
                       onClick={() => {
                         setOpenMobile(false);
-                        router.push("/");
+                        router.push(withBasePath("/"));
                         router.refresh();
                       }}
                       type="button"

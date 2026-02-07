@@ -6,10 +6,24 @@ import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 
+const getSiteUrl = () => {
+  const explicitUrl = process.env.NEXT_PUBLIC_SITE_URL;
+  if (explicitUrl) {
+    return explicitUrl;
+  }
+
+  const vercelUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  if (vercelUrl) {
+    return `https://${vercelUrl}`;
+  }
+
+  return "http://localhost:3000";
+};
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://chat.vercel.ai"),
-  title: "Next.js Chatbot Template",
-  description: "Next.js chatbot template using the AI SDK.",
+  metadataBase: new URL(getSiteUrl()),
+  title: "Clawbot AI Chat",
+  description: "Assistente conversacional com AI SDK e Next.js.",
 };
 
 export const viewport = {
