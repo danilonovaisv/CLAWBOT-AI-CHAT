@@ -213,7 +213,7 @@ importers:
         specifier: ^15.6.6
         version: 15.6.6(react@19.0.1)
       redis:
-        specifier: ^5.0.0
+        specifier: ^5.9.0
         version: 5.9.0
       resumable-stream:
         specifier: ^2.2.10
